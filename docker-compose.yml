@@ -1,0 +1,15 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: forma-web
+    container_name: forma-web
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - STRAPI_URL=http://host.docker.internal:1337
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
