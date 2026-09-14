@@ -1,6 +1,9 @@
 # Build stage
 FROM node:22-alpine AS builder
 
+# Disable Next.js telemetry during build (silences "Attention: Next.js now collects..." banner)
+ENV NEXT_TELEMETRY_DISABLED=1
+
 WORKDIR /app
 
 # Copy dependency files
@@ -37,7 +40,8 @@ COPY --from=builder /app/next.config.ts ./
 
 # Set environment to production
 ENV NODE_ENV=production \
-    STRAPI_URL=http://host.docker.internal:1337
+    STRAPI_URL=http://host.docker.internal:1337 \
+    NEXT_TELEMETRY_DISABLED=1
 
 # Expose port
 EXPOSE 3000

@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "postinstall": "next telemetry disable || true",
     "start": "next start",
     "lint": "eslint"
   },
