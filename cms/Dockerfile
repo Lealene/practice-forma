@@ -25,12 +25,14 @@ ENV NODE_ENV=production \
     JWT_SECRET=OR+Ew3O3o9OqegZBZSG9Mw== \
     ENCRYPTION_KEY=ZMbZScDzAiayVDML6YamXw== \
     DATABASE_CLIENT=sqlite \
-    DATABASE_FILENAME=.tmp/data.db
+    DATABASE_FILENAME=.tmp/data.db \
+    STRAPI_DISABLE_UPDATE_NOTIFICATION=true \
+    NODE_OPTIONS=--max-old-space-size=512
 
 # Ensure writable dirs for sqlite + uploads on Render ephemeral FS
 RUN mkdir -p .tmp public/uploads
 
-HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=5 \
+HEALTHCHECK --interval=30s --timeout=10s --start-period=90s --retries=5 \
   CMD wget -qO- http://localhost:${PORT:-1337}/_health || wget -qO- http://localhost:${PORT:-1337}/admin || exit 1
 
-CMD ["npm", "start"]
+CMD ["sh", "-c", "echo \"[strapi] PORT=$PORT HOST=$HOST DATABASE_CLIENT=$DATABASE_CLIENT NODE_ENV=$NODE_ENV\" && npm start"]
