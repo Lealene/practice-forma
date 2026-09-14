@@ -1,6 +1,9 @@
 import { Product, Category, ProductImage } from "@/types/product";
 
 const API_URL = process.env.STRAPI_URL ?? "http://localhost:1337";
+// Public URL for images — must be browser-resolvable (localhost), not Docker internal `strapi`
+const PUBLIC_STRAPI_URL =
+  process.env.NEXT_PUBLIC_STRAPI_URL ?? "http://localhost:1337";
 
 interface StrapiImage {
   id: number;
@@ -44,7 +47,7 @@ interface StrapiProduct {
 function absoluteUrl(url?: string): string | undefined {
   if (!url) return undefined;
   if (url.startsWith("http")) return url;
-  return `${API_URL}${url}`;
+  return `${PUBLIC_STRAPI_URL}${url}`;
 }
 
 function mapImages(images?: StrapiImage[]): ProductImage[] | undefined {

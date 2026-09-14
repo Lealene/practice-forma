@@ -1,14 +1,5 @@
 import type { NextConfig } from "next";
 
-const strapiUrl = process.env.STRAPI_URL ?? "http://localhost:1337";
-const strapiHost = (() => {
-  try {
-    return new URL(strapiUrl).hostname;
-  } catch {
-    return "localhost";
-  }
-})();
-
 const nextConfig: NextConfig = {
   turbopack: {
     root: __dirname,
@@ -17,15 +8,35 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "http",
-        hostname: strapiHost,
+        hostname: "strapi",
       },
       {
         protocol: "https",
-        hostname: strapiHost,
+        hostname: "strapi",
       },
       {
         protocol: "http",
         hostname: "localhost",
+        port: "1337",
+      },
+      {
+        protocol: "https",
+        hostname: "localhost",
+        port: "1337",
+      },
+      {
+        protocol: "http",
+        hostname: "127.0.0.1",
+        port: "1337",
+      },
+      {
+        protocol: "http",
+        hostname: "host.docker.internal",
+        port: "1337",
+      },
+      {
+        protocol: "https",
+        hostname: "host.docker.internal",
         port: "1337",
       },
       {
