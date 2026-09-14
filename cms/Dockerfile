@@ -13,11 +13,11 @@ RUN npm run build
 
 EXPOSE 1337
 
+# Render injects PORT=10000 at runtime — do NOT hardcode PORT here.
 # Fallback Strapi secrets — Render/GitHub has no .env (gitignored).
 # Override these in Render dashboard with real secrets for production.
 ENV NODE_ENV=production \
     HOST=0.0.0.0 \
-    PORT=1337 \
     APP_KEYS=tLD4pBKcfAZfQ9jFTRFldg==,DJrt3H0XncwGEYjSysI7QQ==,8UjFTAV7RdI+jhzcJVFQ8Q==,yHEFdqkZ6wwTBN2TPJ7+kA== \
     API_TOKEN_SALT=lZZAKQFoFF6T2VC6gbdk+w== \
     ADMIN_JWT_SECRET=UZzHESUPyOvQjT75lJFYMw== \
@@ -27,7 +27,10 @@ ENV NODE_ENV=production \
     DATABASE_CLIENT=sqlite \
     DATABASE_FILENAME=.tmp/data.db
 
+# Ensure writable dirs for sqlite + uploads on Render ephemeral FS
+RUN mkdir -p .tmp public/uploads
+
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=5 \
-  CMD wget -qO- http://localhost:1337/_health || wget -qO- http://localhost:1337/admin || exit 1
+  CMD wget -qO- http://localhost:${PORT:-1337}/_health || wget -qO- http://localhost:${PORT:-1337}/admin || exit 1
 
 CMD ["npm", "start"]
