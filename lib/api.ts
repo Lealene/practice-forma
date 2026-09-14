@@ -87,32 +87,53 @@ function mapCategory(category: StrapiCategory): Category {
   } as unknown as Category;
 }
 
+function isDynamicServerError(err: unknown): boolean {
+  return (
+    typeof err === "object" &&
+    err !== null &&
+    "digest" in err &&
+    (err as { digest?: string }).digest === "DYNAMIC_SERVER_USAGE"
+  );
+}
+
 export async function getProducts(): Promise<Product[]> {
-  const res = await fetch(`${API_URL}/api/products?populate=*`, {
-    cache: "no-store",
-  });
+  try {
+    const res = await fetch(`${API_URL}/api/products?populate=*`, {
+      cache: "no-store",
+    });
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch products");
+    if (!res.ok) {
+      console.warn(`[api] getProducts failed: ${res.status} ${res.statusText}`);
+      return [];
+    }
+
+    const data = await res.json();
+    return (data.data as StrapiProduct[]).map(mapProduct);
+  } catch (err) {
+    if (isDynamicServerError(err)) throw err;
+    console.warn("[api] getProducts error:", err);
+    return [];
   }
-
-  const data = await res.json();
-
-  return (data.data as StrapiProduct[]).map(mapProduct);
 }
 
 export async function getCategories(): Promise<Category[]> {
-  const res = await fetch(`${API_URL}/api/categories?populate=*`, {
-    cache: "no-store",
-  });
+  try {
+    const res = await fetch(`${API_URL}/api/categories?populate=*`, {
+      cache: "no-store",
+    });
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch categories");
+    if (!res.ok) {
+      console.warn(`[api] getCategories failed: ${res.status} ${res.statusText}`);
+      return [];
+    }
+
+    const data = await res.json();
+    return (data.data as StrapiCategory[]).map(mapCategory);
+  } catch (err) {
+    if (isDynamicServerError(err)) throw err;
+    console.warn("[api] getCategories error:", err);
+    return [];
   }
-
-  const data = await res.json();
-
-  return (data.data as StrapiCategory[]).map(mapCategory);
 }
 
 export interface CategoryFilterResult {
@@ -137,19 +158,26 @@ export function filterProductsByCategory(
 }
 
 export async function getProduct(slug: string): Promise<Product | undefined> {
-  const res = await fetch(
-    `${API_URL}/api/products?filters[slug][$eq]=${encodeURIComponent(slug)}&populate=*`,
-    {
-      cache: "no-store",
-    },
-  );
+  try {
+    const res = await fetch(
+      `${API_URL}/api/products?filters[slug][$eq]=${encodeURIComponent(slug)}&populate=*`,
+      {
+        cache: "no-store",
+      },
+    );
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch product");
+    if (!res.ok) {
+      console.warn(`[api] getProduct failed: ${res.status} ${res.statusText}`);
+      return undefined;
+    }
+
+    const data = await res.json();
+
+    if (!data.data || data.data.length === 0) return undefined;
+    return mapProduct(data.data[0] as StrapiProduct);
+  } catch (err) {
+    if (isDynamicServerError(err)) throw err;
+    console.warn("[api] getProduct error:", err);
+    return undefined;
   }
-
-  const data = await res.json();
-
-  if (!data.data || data.data.length === 0) return undefined;
-  return mapProduct(data.data[0] as StrapiProduct);
 }
