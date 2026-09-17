@@ -1,9 +1,15 @@
 import { Product, Category, ProductImage } from "@/types/product";
 
 const API_URL = process.env.STRAPI_URL ?? "http://localhost:1337";
-// Public URL for images — must be browser-resolvable (localhost), not Docker internal `strapi`
+// Base URL for images. The Next.js image optimizer (running server-side, inside the
+// web container) must be able to reach it, so resolve from the most specific config:
+//   1. NEXT_PUBLIC_STRAPI_URL — canonical image base (compose sets http://strapi:1337,
+//      Railway/Live should set the public Strapi URL)
+//   2. STRAPI_URL — the server's configured Strapi host (falls back to localhost:1337)
 const PUBLIC_STRAPI_URL =
-  process.env.NEXT_PUBLIC_STRAPI_URL ?? "http://localhost:1337";
+  process.env.NEXT_PUBLIC_STRAPI_URL ??
+  process.env.STRAPI_URL ??
+  "http://localhost:1337";
 
 interface StrapiImage {
   id: number;
