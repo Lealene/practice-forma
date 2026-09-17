@@ -4,6 +4,7 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: __dirname,
   },
+
   images: {
     remotePatterns: [
       {
@@ -39,6 +40,13 @@ const nextConfig: NextConfig = {
         hostname: "host.docker.internal",
         port: "1337",
       },
+
+      // Production Strapi on Railway
+      {
+        protocol: "https",
+        hostname: "practice-forma-production.up.railway.app",
+      },
+
       {
         protocol: "https",
         hostname: "images.unsplash.com",
@@ -48,6 +56,7 @@ const nextConfig: NextConfig = {
         hostname: "tse4.mm.bing.net",
       },
     ],
+
     dangerouslyAllowLocalIP: true,
   },
 };
