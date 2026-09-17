@@ -178,7 +178,7 @@ pnpm lint   # eslint
 
 | Var | Required | Default | Notes |
 |-----|----------|---------|-------|
-| `NEXT_PUBLIC_STRAPI_URL` | — | `http://localhost:1337` | Exposed to client; `STRAPI_URL` also supported (server-only) — see `lib/strapi.ts:3` and `next.config.ts:3` |
+| `NEXT_PUBLIC_STRAPI_URL` | — | `http://localhost:1337` | Base URL used to build image URLs (`lib/api.ts:6`). Must be reachable by the Next.js image optimizer — in Docker Compose use `http://strapi:1337`, on Railway use the public Strapi URL |
 | `STRAPI_URL` | — | `http://localhost:1337` | Server-only fallback |
 
 ---

@@ -79,6 +79,9 @@ services:
       # Inside Docker network use `http://strapi:1337`, outside/fallback use host.docker.internal
       # When running with --profile cms, web talks to strapi service. Otherwise it falls back to host.
       - STRAPI_URL=${STRAPI_URL:-http://strapi:1337}
+      # Image URLs must be reachable by the Next.js image optimizer (runs inside THIS
+      # container), so use the Docker-network hostname, not localhost.
+      - NEXT_PUBLIC_STRAPI_URL=${NEXT_PUBLIC_STRAPI_URL:-http://strapi:1337}
     extra_hosts:
       - "host.docker.internal:host-gateway"
     depends_on:
