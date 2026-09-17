@@ -10,7 +10,7 @@ WORKDIR /app
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 
 # Enable corepack and use the pnpm version pinned in package.json
-RUN corepack enable && corepack prepare pnpm@11.6.0 --activate && \
+RUN corepack enable && corepack prepare pnpm@11.15.1 --activate && \
     pnpm install --frozen-lockfile
 
 # Copy source code
@@ -25,7 +25,7 @@ FROM node:22-alpine
 WORKDIR /app
 
 # Enable pnpm via corepack
-RUN corepack enable && corepack prepare pnpm@11.6.0 --activate
+RUN corepack enable && corepack prepare pnpm@11.15.1 --activate
 
 # Copy package files (pnpm-workspace.yaml needed for allowBuilds of native deps)
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
