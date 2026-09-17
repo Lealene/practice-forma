@@ -9,8 +9,15 @@ const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Server =>
       'DJrt3H0XncwGEYjSysI7QQ==',
       '8UjFTAV7RdI+jhzcJVFQ8Q==',
       'yHEFdqkZ6wwTBN2TPJ7+kA==',
-    ]),
+     ]),
   },
+
+  transfer: {
+    remote: {
+      enabled: true,
+    },
+  },
+
   webhooks: {
     populateRelations: env.bool('WEBHOOKS_POPULATE_RELATIONS', false),
   },
